@@ -5,7 +5,9 @@ Instructions for AI coding agents, and for humans, working on Vagus. Claude Code
 
 ## What Vagus is
 
-A fast, local-first system monitor for Windows that explains why the machine is slow.
+A fast, local-first control center for Windows: one place to see, understand and
+manage everything on the machine, open to AI tools through MCP. It grows module by
+module, and the first module diagnoses why the machine is slow.
 
 - **`vagus-daemon`** (Rust) runs all the time. It collects metrics and inventory, keeps
   a 15-minute in-memory flight recorder, diagnoses problems and sends notifications.

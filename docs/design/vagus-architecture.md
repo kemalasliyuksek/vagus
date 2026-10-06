@@ -9,8 +9,13 @@ in the [ADRs](../adr/README.md). Anything marked **open** has not been decided y
 
 ## Problem
 
-When a Windows machine slows down or behaves strangely, finding the cause takes too
-long:
+What a Windows machine is doing is scattered across many tools: Task Manager for
+processes, the Services console, Settings for installed programs, vendor utilities for
+sensors, Docker Desktop for containers, a terminal for git. Each shows its own slice as
+raw numbers. None of them explains anything, and none can be queried by other tools.
+
+The most urgent case is slowness. When a Windows machine slows down or behaves
+strangely, finding the cause takes too long:
 
 - **Task Manager** shows numbers, not causes.
 - **Resource Monitor and System Informer** are powerful but dense. They answer "what
@@ -23,34 +28,43 @@ long:
 - **Spikes vanish:** by the time any tool opens, the spike that caused the slowdown is
   often over.
 
-Vagus is a fast, local-first monitor that names the cause in one sentence, remembers
-the last 15 minutes, and is open to AI tools through MCP. Over time it grows into a
-modular "brain" for the whole machine: services, installed programs, git repositories,
-containers and more.
+Vagus is a fast, local-first control center for the whole machine:
+
+- One daemon watches everything at almost no cost.
+- The desktop app, the CLI, MCP and later a widget all see the same picture through
+  one API.
+- It grows module by module: services, installed programs, git repositories,
+  containers and more.
+
+The first module tackles slowness. It names the cause in one sentence and remembers
+the last 15 minutes.
 
 ## Goals and non-goals
 
 ### Goals
 
-1. **Explain, do not just display.** When something is wrong, the first screen names
+1. **One place for the whole machine.** Processes, hardware, and later services,
+   installed programs, repositories and containers, in one app and one API instead of a
+   dozen tools.
+2. **Explain, do not just display.** When something is wrong, the first screen names
    the bottleneck and the likely cause in one sentence, for example: "CPU is idle but
    at 83 °C: power mode is Silent and the fans are slow".
-2. **Remember the recent past.** The last 15 minutes are kept in memory, so a spike that
+3. **Remember the recent past.** The last 15 minutes are kept in memory, so a spike that
    already ended is still visible ([ADR 0011](../adr/0011-in-memory-flight-recorder.md)).
-3. **Cost almost nothing.** The daemon stays within the
+4. **Cost almost nothing.** The daemon stays within the
    [performance budgets](#performance-budgets) and shows its own resource use.
-4. **Open by design.** Every capability is available to the UI, MCP and the CLI through
+5. **Open by design.** Every capability is available to the UI, MCP and the CLI through
    one schema-described API
    ([ADR 0007](../adr/0007-api-first-capability-registry.md),
    [ADR 0008](../adr/0008-mcp-as-a-first-class-interface.md)).
-5. **Grow by modules.** New areas (services, apps, repositories, Docker, ...) are added
+6. **Grow by modules.** New areas (services, apps, repositories, Docker, ...) are added
    without changing the core or the clients
    ([ADR 0017](../adr/0017-compiled-in-modules-before-plugins.md)).
-6. **Pleasant to use.** The UI is simple, clear, elegant and customizable, with light
+7. **Pleasant to use.** The UI is simple, clear, elegant and customizable, with light
    and dark themes, and launches in English and Turkish
    ([ADR 0014](../adr/0014-localization.md),
    [ADR 0015](../adr/0015-theming-and-customization.md)).
-7. **Safe.** Least privilege, gated actions, an audit log and no telemetry
+8. **Safe.** Least privilege, gated actions, an audit log and no telemetry
    ([ADR 0009](../adr/0009-privilege-model.md),
    [ADR 0013](../adr/0013-logging-and-no-telemetry.md)).
 
