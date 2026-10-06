@@ -1,0 +1,5 @@
+# Quality gate aliases. The full gate is:
+#   cargo fmt --all --check && cargo lint && cargo typecheck && cargo test --workspace
+[alias]
+lint = "clippy --workspace --all-targets -- -D warnings"
+typecheck = "check --workspace --all-targets"

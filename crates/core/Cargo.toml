@@ -1,0 +1,12 @@
+[package]
+name = "vagus-core"
+description = "Core building blocks shared by the Vagus daemon and its modules."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true

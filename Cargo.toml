@@ -1,0 +1,23 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/kemalasliyuksek/vagus"
+# Vagus ships as an application; crates are not published (the `vagus` name on crates.io is taken, see ADR 0002).
+publish = false
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+# Every unsafe block must explain why it is sound (Win32 FFI lives in platform crates).
+undocumented_unsafe_blocks = "warn"
+unwrap_used = "warn"
+dbg_macro = "warn"
+todo = "warn"
