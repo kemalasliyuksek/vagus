@@ -1,7 +1,7 @@
 # Vagus architecture
 
 - Status: draft
-- Author: Kemal Aslıyüksek (owner), drafted with Claude Code
+- Owner: Kemal Aslıyüksek
 - Date: 2026-10-06
 
 This is the living description of the system. The reasoning behind each choice lives

@@ -15,22 +15,21 @@ window, the spike is often gone.
 Vagus is built to answer one question quickly: **what is wrong right now, or what was
 wrong a minute ago, and what caused it?**
 
-## What it will do
+## Planned
 
-- **One-sentence diagnosis**, for example "CPU is idle but at 83 °C: power mode is
-  Silent and the fans are slow", with the evidence one click away.
-- **A 15-minute flight recorder** in memory, so spikes that already ended are still
-  visible.
-- **Processes explained:** which processes and services use CPU, memory, disk, GPU and
-  network, and which GPU each process runs on.
-- **Laptop sensors** (temperatures, fans, throttling, power mode) without installing
-  vulnerable kernel drivers.
-- **Notifications** that are rare and useful: a cause and an action, not just an alarm.
-- **A calm, customizable UI** with light and dark themes, in English and Turkish.
-- **Open to AI tools through MCP.** Once available, `claude mcp add vagus -- vagus mcp`
-  lets an assistant inspect your machine with the same capabilities the UI has.
-- **Later:** services, installed programs, git repositories, Docker containers, and a
-  desktop widget, added one module at a time.
+None of this exists yet; the [roadmap](docs/roadmap.md) tracks progress.
+
+- A one-sentence diagnosis of what is slowing the machine down, for example "CPU is
+  idle but at 83 °C: power mode is Silent and the fans are slow", with the evidence one
+  click away.
+- A 15-minute in-memory flight recorder, so spikes that already ended are still visible.
+- Per-process and per-service use of CPU, memory, disk, GPU and network, including
+  which GPU each process runs on.
+- Laptop sensors (temperatures, fans, throttling, power mode) without vulnerable kernel
+  drivers.
+- A calm, customizable UI with light and dark themes, in English and Turkish.
+- An MCP server, so AI tools can inspect the machine with the same capabilities as the
+  UI.
 
 ## Principles
 
@@ -52,6 +51,16 @@ OS APIs and sensors --> vagus-daemon (collect, record, diagnose, notify)
 
 Read the [architecture](docs/design/vagus-architecture.md) and the
 [architecture decision records](docs/adr/README.md) for the details and the reasoning.
+
+## How Vagus is built
+
+Vagus is designed and maintained by Kemal Aslıyüksek. Most of the code is written with
+Claude Code, an AI coding agent, working from the design and the decisions in
+[`docs/`](docs/). Kemal sets the direction, makes the decisions and reviews every
+change. Changes must pass the quality gate, and behavior changes come with tests.
+
+The [ADRs](docs/adr/README.md) explain why things are the way they are.
+[AGENTS.md](AGENTS.md) holds the rules that agents and human contributors follow.
 
 ## Development
 

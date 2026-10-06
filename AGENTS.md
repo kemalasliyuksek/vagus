@@ -115,12 +115,31 @@ Frontend commands are added in Phase 1.
 - **Named pipes:** per user, rejecting remote clients, with an explicit DACL.
 - **Never commit secrets.** The pre-commit hook runs gitleaks. Do not bypass hooks.
 
+## Quality bar
+
+Most code in this repository is written with AI coding agents. That only works if the
+output meets the standard of careful human work:
+
+- **Justify everything you write.** No speculative abstractions, no dead code, no
+  placeholder `TODO`s, and no APIs you have not checked against documentation or the
+  compiler.
+- **Comments explain why.** Never restate what the code does.
+- **Prove it.** Every behavior change comes with a test, and every performance claim
+  with a measurement.
+- **Keep changes small.** Prefer the smallest change that solves the problem. Do not
+  refactor or reformat code outside the task.
+- **Keep docs short and specific.** No marketing language, no emoji, and never describe
+  planned features as if they exist.
+- **Make changes reviewable.** The maintainer reads and understands every diff before
+  it is committed. Present each change as what changed, why, and how it was verified.
+
 ## Commits
 
 - Conventional Commits in English, for example `feat(core): add ring buffer`.
-- Do not add AI attribution trailers or lines (no `Co-Authored-By` for AI tools, no
-  "Generated with ...").
-- Keep commits small and focused, with the quality gate green.
+- One logical change per commit, with the quality gate green and nothing half-finished.
+- The subject says what changed. The body, if there is one, says why. No filler.
+- No per-commit AI attribution trailers (`Co-Authored-By` for AI tools, "Generated
+  with ..."). AI use is disclosed once, at the project level, in the README.
 
 ## Decisions and docs
 

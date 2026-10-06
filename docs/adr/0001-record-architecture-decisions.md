@@ -2,13 +2,13 @@
 
 - Status: accepted
 - Date: 2026-10-06
-- Deciders: Kemal Aslıyüksek (owner)
+- Deciders: Kemal Aslıyüksek
 
 ## Context and problem
 
-Vagus is built almost entirely by AI coding agents (Claude Code) under the owner's
-direction, and it is open source. Agents and contributors start every session without
-memory of earlier discussions. Without a written record, settled decisions get
+Vagus is open source, and most of its code is written with AI coding agents (Claude
+Code) under the maintainer's direction and review. Agents and contributors start every
+session without memory of earlier discussions. Without a written record, settled decisions get
 re-argued or silently reversed.
 
 ## Considered options

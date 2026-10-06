@@ -34,3 +34,6 @@ messages (`/commit-tr`). This project explicitly overrides both
   Sensor work targets this hardware first.
 - **Verification:** run the quality gate from `AGENTS.md` before claiming anything
   works. `/check` runs the same steps.
+- **Review before commit:** after a change, summarize what changed, why and how it was
+  verified, so Kemal can review the diff. Commit only when he asks. The bar is the
+  "Quality bar" section of `AGENTS.md`.

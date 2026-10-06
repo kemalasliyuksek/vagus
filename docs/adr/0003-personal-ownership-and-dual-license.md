@@ -2,7 +2,7 @@
 
 - Status: accepted
 - Date: 2026-10-06
-- Deciders: Kemal Aslıyüksek (owner)
+- Deciders: Kemal Aslıyüksek
 
 ## Context and problem
 

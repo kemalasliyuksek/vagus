@@ -2,15 +2,15 @@
 
 - Status: proposed (ATKACPI access and NVML gating are validated in Phase 0)
 - Date: 2026-10-06
-- Deciders: Kemal Aslıyüksek (owner), proposed by Claude Code
+- Deciders: Kemal Aslıyüksek
 
 ## Context and problem
 
 Windows has no public user-mode API for CPU temperature or fan speed:
 
-- The ACPI thermal zone counter is readable without admin, but it is not the CPU die
-  temperature. On the reference machine it read 83 to 89 °C at 3.6 % CPU load, with
-  the "Silent" power plan active (see `docs/research/`).
+- The ACPI thermal zone counter is readable without admin, but nothing guarantees it
+  measures the CPU die. On the reference machine it read 83 to 89 °C at 3.6 % CPU
+  load, with the "Silent" power plan active (see `docs/research/`).
 - On AMD Ryzen, the real CPU temperature is read from the SMU through PCI
   configuration space, which needs a kernel driver.
 - Laptop fans are controlled by the embedded controller (EC). Generic tools that look

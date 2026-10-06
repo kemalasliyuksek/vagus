@@ -2,7 +2,7 @@
 
 - Status: proposed (source costs are measured in Phase 0)
 - Date: 2026-10-06
-- Deciders: Kemal Aslıyüksek (owner), proposed by Claude Code
+- Deciders: Kemal Aslıyüksek
 
 ## Context and problem
 
