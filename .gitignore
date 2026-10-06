@@ -1,0 +1,34 @@
+# Rust build output (root workspace and Tauri's src-tauri)
+target/
+**/*.rs.bk
+
+# Frontend (apps/desktop, Phase 1)
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# Environment files and secrets. Only the example file is tracked.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+secrets/
+
+# Logs
+*.log
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code local state
+.claude/session-state.md
+.claude/settings.local.json
