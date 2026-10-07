@@ -38,8 +38,9 @@ now, or a minute ago?**
 - A 15-minute in-memory flight recorder, so spikes that already ended are still visible.
 - Per-process and per-service use of CPU, memory, disk, GPU and network, including
   which GPU each process runs on.
-- Laptop sensors (temperatures, fans, throttling, power mode) without vulnerable kernel
-  drivers.
+- Throttling, power mode and the temperatures Windows itself exposes, on any Windows 11
+  PC. Fan speeds and more precise temperatures come from optional vendor integrations,
+  never from vulnerable kernel drivers.
 
 It ships with a calm, customizable desktop app (light and dark themes, English and
 Turkish) and an MCP server, so AI tools can inspect the machine with the same

@@ -1,6 +1,6 @@
 # 0012. Hardware sensor sources without vulnerable drivers
 
-- Status: proposed (ATKACPI access and NVML gating are validated in Phase 0)
+- Status: superseded by [ADR 0018](0018-generic-windows-baseline-vendor-integrations-optional.md)
 - Date: 2026-10-06
 - Deciders: Kemal Aslıyüksek
 

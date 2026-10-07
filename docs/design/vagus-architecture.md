@@ -67,6 +67,9 @@ the last 15 minutes.
 8. **Safe.** Least privilege, gated actions, an audit log and no telemetry
    ([ADR 0009](../adr/0009-privilege-model.md),
    [ADR 0013](../adr/0013-logging-and-no-telemetry.md)).
+9. **Any Windows 11 PC.** Core features rely only on what Windows provides. Vendor
+   integrations (laptop makers, GPU vendors) are optional extras
+   ([ADR 0018](../adr/0018-generic-windows-baseline-vendor-integrations-optional.md)).
 
 ### Non-goals (for now)
 
@@ -91,7 +94,7 @@ the last 15 minutes.
    Win32 / NT APIs  |               vagus-daemon               |
    PDH, ETW (via    |  scheduler -> modules -> capability      |
    sensor service), |  registry -> flight recorder -> rules    |
-   ATKACPI, NVML,   |  -> diagnosis -> notifications           |
+   vendor sensors,  |  -> diagnosis -> notifications           |
    Docker, gix  --> |  config store, audit log, API server     |
                     +--------------------+---------------------+
                                          | JSON-RPC 2.0 over a per-user named pipe
@@ -222,15 +225,23 @@ plan, confirmed in Phase 0).
 
 ### Hardware sensors
 
-Details in [ADR 0012](../adr/0012-hardware-sensor-sources.md). Sensors sit behind a
-`SensorSource` trait:
+Details in [ADR 0018](../adr/0018-generic-windows-baseline-vendor-integrations-optional.md).
+Sensors come in two tiers:
 
-- **ASUS ATKACPI**, called with read methods only.
-- **NVIDIA NVML**, queried only while the discrete GPU is already awake.
-- **ACPI thermal zone**, as a low-confidence fallback.
+- **Baseline, on every Windows 11 PC:**
+  - ACPI thermal zone temperature, always labeled low confidence;
+  - thermal zone passive limit and throttle reasons;
+  - `% Performance Limit`, processor frequency and the power mode;
+  - GPU temperature from the display driver, if Phase 0 shows that reading it does not
+    wake a sleeping discrete GPU.
+- **Vendor integrations, optional modules:** active only when their hardware is
+  detected, read methods only. The first candidate is ASUS ATKACPI for CPU and GPU
+  temperatures and fan speeds. GPU vendor libraries such as NVIDIA NVML are queried
+  only while the discrete GPU is already awake.
 
-No WinRing0 or other generic hardware-access drivers. Every sensor fails soft and
-reports "unavailable" rather than a wrong value.
+The diagnosis works from baseline signals alone; vendor data adds detail and
+confidence. No WinRing0 or other generic hardware-access drivers. Every sensor fails
+soft and reports "unavailable" rather than a wrong value.
 
 ### Flight recorder
 
@@ -442,14 +453,18 @@ Each ADR has the full comparison. The main forks were:
 
 Risks:
 
-- **ATKACPI is undocumented.** Does it need admin? Which identifiers apply to this
-  model? Is it stable across BIOS updates? Phase 0 measures this. Only read methods are
-  ever called.
-- **NVML wakes the dGPU.** We need a way to detect the discrete GPU's power state
+- **The baseline has no CPU die temperature or fan speed.** Windows offers no generic
+  API for either. Without a vendor integration the thermal picture is the thermal zone
+  (low confidence) plus throttling signals, and the diagnosis must say so.
+- **Vendor interfaces are undocumented.** ATKACPI and similar interfaces may need
+  admin, differ between models and change with BIOS updates. Each integration is
+  validated when it is built, and only read methods are ever called.
+- **Polling can wake the dGPU.** NVML does, and Phase 0 checks whether the generic GPU
+  sources (PDH, D3DKMT) do too. We need a way to detect the discrete GPU's power state
   without waking it. Phase 0.
 - **Thermal zone reading on the reference machine.** It reads 83 to 89 °C at 3.6 %
-  CPU load with the Silent plan. It cannot be interpreted until fan speed is known.
-  Phase 0.
+  CPU load with the Silent plan. Phase 0 compares it with the temperature Armoury
+  Crate displays to learn what it measures.
 - **WebView2 under load.** Real cold-open times and memory need measuring on the
   reference machine.
 - **Toasts from an unpackaged daemon** need a registered AppUserModelID (normally via a
@@ -480,7 +495,8 @@ Open questions:
   validation and migration.
 - **Module contract tests:** platform calls sit behind traits, so modules are tested
   with fakes and recorded fixtures. Hardware-specific sources have smoke tests that skip
-  cleanly when the hardware is absent (CI has no ATKACPI).
+  cleanly when the hardware is absent (the CI runner has no sensors, no discrete GPU and
+  no vendor hardware).
 - **Windows CI** (GitHub Actions, `windows-latest`): fmt, clippy with `-D warnings`,
   tests, `svelte-check`, frontend tests, gitleaks, and dependency license and advisory
   checks.

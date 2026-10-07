@@ -8,8 +8,10 @@ The rule for every phase: ship one thing end to end before widening the scope.
 ## Phase 0: measure the risky sources
 
 Goal: replace the assumptions in [ADR 0010](adr/0010-data-collection-strategy.md) and
-[ADR 0012](adr/0012-hardware-sensor-sources.md) with numbers before the daemon is
-written.
+the baseline sources of
+[ADR 0018](adr/0018-generic-windows-baseline-vendor-integrations-optional.md) with
+numbers before the daemon is written. Phase 0 uses only what Windows provides; vendor
+interfaces are validated when their integration is built.
 
 Spikes are throwaway code outside the repository; findings are recorded in
 `docs/research/`. What to measure:
@@ -18,19 +20,25 @@ Spikes are throwaway code outside the repository; findings are recorded in
   at the reference machine's process count.
 - **PDH:** cost of a collect with the planned counter set (English names), and how
   `% Performance Limit` behaves under load and heat.
-- **GPU:** cost of PDH `GPU Engine` counters versus D3DKMT statistics, and mapping
-  adapter LUIDs to names through DXGI.
-- **ATKACPI:** opening the device, and read-only calls for CPU and GPU temperature and
-  fan speed. Is admin required?
-- **dGPU:** detecting the discrete GPU's power state without waking it. NVML is queried
-  only when the GPU is awake.
+- **GPU:** cost of PDH `GPU Engine` counters versus D3DKMT statistics, mapping adapter
+  LUIDs to names, and GPU temperature from the display driver's adapter performance
+  data.
+- **dGPU:** detecting the discrete GPU's power state without waking it, and checking
+  that the generic GPU sources do not wake it either.
+- **Thermal:** thermal zone temperature, passive limit and throttle reasons. On the
+  reference machine, compare the zone with the temperature Armoury Crate displays to
+  learn what it measures.
+- **Other baseline sources:** `GetIfTable2`, power status and power mode, and
+  `EnumServicesStatusExW`, followed by a prototype tick that runs every chosen source
+  together.
 - **ETW:** overhead of a kernel ETW session for per-process network and disk (admin).
 - **WebView2:** cold and warm window open time, and memory, on the reference machine.
 
 Exit criteria:
 
 - A table of every source with its cost, privilege requirement and reliability.
-- ADR 0010 and ADR 0012 accepted or superseded.
+- ADR 0010 accepted or superseded, and the baseline sources in ADR 0018 confirmed or
+  replaced.
 
 ## Phase 1: core and the first module, end to end
 
@@ -47,6 +55,8 @@ Exit criteria:
 - **perf module:**
   - processes;
   - CPU, including throttling and power plan;
+  - baseline thermal signals: thermal zone, passive limit, throttle reasons, and GPU
+    temperature if Phase 0 confirms it;
   - memory and disk;
   - GPU per process with its adapter;
   - network totals;
@@ -78,8 +88,8 @@ Exit criteria:
 
 - **`vagus-sensor` service:** per-process network and disk from kernel ETW, plus the
   privileged sensors.
-- **Sensors:** ATKACPI temperatures and fans, NVML gated on the dGPU being awake, and
-  the ACPI thermal zone as a fallback.
+- **First vendor integrations** (optional modules, ADR 0018): ASUS ATKACPI for
+  temperatures and fans, and NVML gated on the dGPU being awake.
 - **Actions:**
   - end process (`user` tier);
   - stop and start a service (`admin` tier, through the elevated helper);
@@ -116,6 +126,7 @@ The order is flexible.
 - Git repositories: status across configured roots.
 - Docker: containers, images, volumes and their resource use.
 - Scheduled tasks, drivers, and Event Log insights.
+- More vendor integrations: other laptop makers and GPU vendors, one at a time.
 - Persistent, downsampled history.
 - Baseline anomaly detection.
 - An in-app AI view: opt-in, with a local-model option, built as an MCP client of
