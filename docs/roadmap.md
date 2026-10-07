@@ -1,7 +1,8 @@
 # Roadmap
 
-Status on 2026-10-06: Phase 0 has not started. The repository contains the design
-document, the ADRs and a minimal `vagus-core` crate that keeps the quality gate honest.
+Status on 2026-10-06: Phase 0 is in progress; measurements so far are in
+[`docs/research/`](research/). The repository contains the design document, the ADRs
+and a minimal `vagus-core` crate that keeps the quality gate honest.
 
 The rule for every phase: ship one thing end to end before widening the scope.
 
