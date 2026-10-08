@@ -432,7 +432,7 @@ Current and planned (planned entries are marked):
 vagus/
   crates/
     core/                 vagus-core: module trait, collection store, platform traits, ring buffer
-    daemon/               (planned) vagus-daemon: scheduler, API, recorder, rules, notifications
+    daemon/               vagus-daemon: sampler; later API, recorder, rules, notifications
     cli/                  (planned) vagus: CLI and the `vagus mcp` bridge
     platform-windows/     Win32 / NT wrappers, the only crate with unsafe code
     sensor-service/       (planned, Phase 2) vagus-sensor privileged read-only service

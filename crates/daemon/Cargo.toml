@@ -1,0 +1,23 @@
+[package]
+name = "vagus-daemon"
+description = "The Vagus daemon: collects, keeps and serves the machine's state."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow = "1.0.104"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+vagus-core.workspace = true
+vagus-perf.workspace = true
+vagus-platform-windows.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints]
+workspace = true
