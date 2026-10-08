@@ -148,21 +148,27 @@ generates:
 - the CLI commands;
 - the TypeScript types for the UI.
 
-The trait shape below is illustrative. The real one is designed in Phase 1:
+The trait in `vagus-core`:
 
 ```rust
 pub trait Module: Send {
-    /// Static description: id, metrics, entity collections, actions, events.
+    /// Static description: id and entity collections.
     fn manifest(&self) -> ModuleManifest;
 
-    /// Called by the scheduler on the module's interval. Writes into the context,
-    /// never allocates per call in steady state.
-    fn sample(&mut self, ctx: &mut SampleContext<'_>) -> Result<(), ModuleError>;
-
-    /// Executes one of the module's declared actions after tier checks.
-    fn invoke(&mut self, request: ActionRequest) -> Result<ActionOutcome, ModuleError>;
+    /// Called on every sampling tick; the module decides which of its sources are due.
+    fn sample(&mut self, ctx: &SampleContext<'_>) -> Result<(), ModuleError>;
 }
 ```
+
+- Only the sampling thread touches a module. A sample publishes each collection as an
+  immutable `Arc` into a shared store, and client threads read from the store, so
+  neither side waits for the other.
+- A collection is serialized only when a client asks for it.
+- A double buffer lets a module build the next snapshot while readers still hold the
+  previous one, so a steady-state sample does not allocate.
+- Platform data reaches modules through traits such as `ProcessSource`. The platform
+  crate implements them and tests replace them with fakes.
+- Metrics, actions and events join the manifest when the first module needs them.
 
 ### Daemon API
 
@@ -425,7 +431,7 @@ Current and planned (planned entries are marked):
 ```
 vagus/
   crates/
-    core/                 vagus-core: shared types, ring buffer; later registry and module trait
+    core/                 vagus-core: module trait, collection store, platform traits, ring buffer
     daemon/               (planned) vagus-daemon: scheduler, API, recorder, rules, notifications
     cli/                  (planned) vagus: CLI and the `vagus mcp` bridge
     platform-windows/     Win32 / NT wrappers, the only crate with unsafe code

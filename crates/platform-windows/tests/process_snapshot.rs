@@ -3,6 +3,7 @@
 
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use vagus_core::{ProcessCounters, ProcessSource};
 use vagus_platform_windows::{ProcessRecord, ProcessSnapshot};
 
 /// The Unix epoch as a `FILETIME`, in 100 ns units since 1601-01-01.
@@ -112,4 +113,26 @@ fn a_refresh_replaces_the_previous_snapshot() {
         after > before,
         "cycle time did not grow: {before} -> {after}"
     );
+}
+
+#[test]
+fn process_source_reports_the_same_counters_and_name() {
+    let pid = std::process::id();
+    let mut snapshot = ProcessSnapshot::new();
+    let mut own: Option<(ProcessCounters, String)> = None;
+    snapshot
+        .snapshot(&mut |entry| {
+            if entry.counters.pid == pid {
+                own = Some((entry.counters, entry.name.decode()));
+            }
+        })
+        .unwrap();
+    let (counters, name) = own.expect("this process is listed");
+
+    let record = find(&snapshot, pid).unwrap();
+    assert_eq!(counters.create_time, record.create_time);
+    assert_eq!(counters.cycle_time, record.cycle_time);
+    assert_eq!(counters.private_bytes, record.private_bytes);
+    assert_eq!(counters.read_bytes, record.read_bytes);
+    assert_eq!(name, record.image_name.to_string_lossy());
 }

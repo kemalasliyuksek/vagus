@@ -1,6 +1,7 @@
 use std::fmt;
 use std::mem::{offset_of, size_of};
 
+use vagus_core::{ProcessCounters, ProcessEntry, ProcessName, ProcessSource};
 use windows_sys::Wdk::System::SystemInformation::{
     NtQuerySystemInformation, SystemProcessInformation,
 };
@@ -149,6 +150,32 @@ impl Default for ProcessSnapshot {
     }
 }
 
+impl ProcessSource for ProcessSnapshot {
+    type Error = SnapshotError;
+
+    fn snapshot(&mut self, visit: &mut dyn FnMut(ProcessEntry<'_>)) -> Result<(), SnapshotError> {
+        self.refresh()?;
+        for record in self.processes() {
+            let record = record?;
+            visit(ProcessEntry {
+                counters: ProcessCounters {
+                    pid: record.pid,
+                    create_time: record.create_time,
+                    cycle_time: record.cycle_time,
+                    working_set: record.working_set,
+                    private_working_set: record.private_working_set,
+                    private_bytes: record.private_bytes,
+                    read_bytes: record.read_bytes,
+                    write_bytes: record.write_bytes,
+                    other_bytes: record.other_bytes,
+                },
+                name: &record.image_name,
+            });
+        }
+        Ok(())
+    }
+}
+
 /// Iterator over the entries of a [`ProcessSnapshot`].
 ///
 /// Yields an error and then stops if an entry lies outside the snapshot, so a caller
@@ -235,6 +262,12 @@ impl ImageName<'_> {
         char::decode_utf16(units)
             .map(|c| c.unwrap_or(char::REPLACEMENT_CHARACTER))
             .collect()
+    }
+}
+
+impl ProcessName for ImageName<'_> {
+    fn decode(&self) -> String {
+        self.to_string_lossy()
     }
 }
 
