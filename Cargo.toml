@@ -1,6 +1,8 @@
 [workspace]
 resolver = "3"
-members = ["crates/*"]
+# Top-level crates are listed by name: a `crates/*` glob would also match
+# `crates/modules`, which only groups the module crates and has no manifest.
+members = ["crates/core", "crates/platform-windows", "crates/modules/*"]
 
 [workspace.package]
 version = "0.0.0"
@@ -17,6 +19,7 @@ serde = "1.0.229"
 serde_json = "1.0.151"
 thiserror = "2.0.21"
 vagus-core = { path = "crates/core" }
+vagus-platform-windows = { path = "crates/platform-windows" }
 windows-sys = "0.61.2"
 
 [workspace.lints.rust]

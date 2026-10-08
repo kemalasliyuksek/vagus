@@ -1,0 +1,22 @@
+[package]
+name = "vagus-perf"
+description = "The Vagus performance module: what is using the machine's resources."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+schemars.workspace = true
+serde = { workspace = true, features = ["derive", "rc"] }
+vagus-core.workspace = true
+
+[dev-dependencies]
+allocation-counter = "0.8.1"
+serde_json.workspace = true
+vagus-platform-windows.workspace = true
+
+[lints]
+workspace = true

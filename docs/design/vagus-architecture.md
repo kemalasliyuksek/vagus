@@ -437,7 +437,7 @@ vagus/
     platform-windows/     Win32 / NT wrappers, the only crate with unsafe code
     sensor-service/       (planned, Phase 2) vagus-sensor privileged read-only service
     elevate/              (planned, Phase 2) one-shot elevated action helper
-    modules/              (planned) perf, sensors, services, ... one crate each
+    modules/              one crate each: perf; later sensors, services, ...
   apps/
     desktop/              (planned) Tauri 2 + Svelte 5 UI
   locales/                (planned) en.json, tr.json
@@ -449,8 +449,8 @@ vagus/
   .githooks/              pre-commit secret scan (gitleaks)
 ```
 
-When `crates/modules/*` appears, the workspace `members` list in `Cargo.toml` needs
-that glob added as well.
+The workspace `members` list in `Cargo.toml` names each top-level crate and covers module
+crates with a `crates/modules/*` glob. A new top-level crate has to be added by name.
 
 ## Alternatives considered
 
