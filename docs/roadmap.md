@@ -85,6 +85,25 @@ enabled in Phase 1.
   - frontend lint, typecheck and tests;
   - root scripts that run the whole gate.
 
+Order of work. Each slice ends with something that runs and has been measured:
+
+1. **`vagus top` end to end:**
+   - Windows CI;
+   - the process snapshot in `platform-windows`;
+   - the first `Module` trait and the perf module's process collection;
+   - the daemon's sampling thread and named pipe API;
+   - `vagus top`.
+
+   This slice also checks per-process CPU against Task Manager.
+2. **Metrics and the flight recorder:** PDH, GPU, network, power, the service mapping
+   and the recorder, with the sampling budget measured. GPU temperature waits for the
+   discrete-GPU wake test.
+3. **Diagnosis, logging and configuration:** redaction, the config store, rules,
+   diagnosis v1 and toasts.
+4. **`vagus mcp`:** before the UI, because it costs less and tests the surface
+   generated from the registry first.
+5. **Desktop UI**, then the exit criteria below.
+
 Exit criteria:
 
 - The performance budgets in the design document are met.
