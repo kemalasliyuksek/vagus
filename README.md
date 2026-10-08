@@ -60,8 +60,8 @@ Modules are added one at a time. Each one appears in the app, the CLI and MCP at
 
 ## Principles
 
-- **Performance first:** the daemon targets under 0.5 % CPU and under 30 MB of memory,
-  and shows its own cost.
+- **Performance first:** the daemon targets under 1.5 % of one CPU core and under 30 MB
+  of memory, and shows its own cost.
 - **Local-first:** no telemetry, and no network connections unless you configure them.
 - **Observe first, act on request:** Vagus watches continuously but changes nothing on
   its own. Every action is explicit and logged.

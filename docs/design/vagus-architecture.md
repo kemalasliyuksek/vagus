@@ -213,15 +213,20 @@ Details in [ADR 0009](../adr/0009-privilege-model.md):
 
 Details in [ADR 0010](../adr/0010-data-collection-strategy.md):
 
-- **Metrics are polled**, at 1 Hz by default.
+- **Metrics are polled**, at 1 Hz by default. The process snapshot runs every 2 seconds:
+  one snapshot costs about 6 ms of CPU on the reference machine, and per-process
+  counters are cumulative, so the slower cadence loses resolution, not attribution.
 - **Inventory is event-driven.**
 - **Preferred sources:** native APIs such as `NtQuerySystemInformation`, PDH with
-  English counter names, `GetIfTable2`, D3DKMT, and the service, registry and directory
-  change notifications.
+  English counter names (including `GPU Engine` for per-process GPU use), `GetIfEntry2`
+  on hardware interfaces, D3DKMT for adapter names and GPU temperature, and the service,
+  registry and directory change notifications. Phase 0 measurements are in
+  [`docs/research/`](../research/).
 - **Never in periodic paths:** WMI, spawning processes, or `Win32_Product`.
 
-The sampling loop runs on a dedicated thread so I/O load does not jitter it (initial
-plan, confirmed in Phase 0).
+The sampling loop runs on a dedicated thread so I/O load does not jitter it. Sources
+that wait on hardware, such as the Energy Meter, are read on their own thread and never
+block it.
 
 ### Hardware sensors
 
@@ -384,14 +389,20 @@ Targets, validated in Phase 0 and 1. Once met, a regression counts as a bug.
 
 | Item | Target |
 |---|---|
-| Daemon CPU, steady state | below 0.5 % of total CPU, 1-minute average, 1 Hz sampling |
+| Daemon CPU, steady state | below 15 ms of CPU time per second (1.5 % of one core), 1-minute average |
+| Sampling, all Phase 1 modules | below 10 ms of CPU time per second on the reference machine, on AC; no source blocks the sampling thread |
 | Daemon memory | below 30 MB private bytes, recorder included |
 | Flight recorder | 10 MB or less |
-| One sampling tick, all Phase 1 modules | below 5 ms wall time on the reference machine |
 | UI window, warm open | below 300 ms to first meaningful paint |
 | UI window, cold open | below 1.5 s |
 | UI while open and nothing changes | no continuous CPU use |
 | `vagus mcp` bridge | below 15 MB, near-zero idle CPU |
+
+CPU budgets are absolute because a share of total CPU depends on the core count: on the
+reference machine's 32 logical processors, 0.5 % of total CPU would allow 160 ms per
+second. CPU is measured with cycle counters, since tick-sampled process times overstate
+short periodic work
+([research](../research/2026-10-08-baseline-sources-and-prototype-tick.md)).
 
 The daemon measures itself and shows the numbers in the UI. A soak test (one hour on
 the reference machine) checks memory stays flat.
