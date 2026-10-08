@@ -363,7 +363,10 @@ Principles:
 - **Keyboard first:** a global hotkey opens the window; every view is reachable from
   the keyboard.
 - **Window lifecycle:** opened from the hotkey or the tray. Closing the window frees the
-  WebView unless "keep warm" is enabled.
+  WebView unless "keep warm" is enabled. Measured in Phase 0: about 170 MiB while
+  open; a reopen takes about 300 ms after the WebView is freed and about 115 ms when it
+  is kept warm, at the cost of about 160 MiB held while closed
+  ([research](../research/2026-10-08-webview2-open-time-and-memory.md)).
 - **Theming** ([ADR 0015](../adr/0015-theming-and-customization.md)):
   - tokens as CSS variables, with themes as JSON token sets;
   - system, light or dark mode, plus accent color and density;
