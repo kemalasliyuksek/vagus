@@ -3,7 +3,10 @@
 - Date: 2026-10-06
 - Phase 0 item: processes ([roadmap](../roadmap.md))
 - Machine: the [reference machine](2026-10-06-reference-machine-baseline.md), Windows
-  build 26300.9457, on AC, power scheme "Silent", standard (non-elevated) user.
+  build 26300.9457, on AC, standard (non-elevated) user. The Windows power scheme was
+  named "Silent"; the Armoury Crate operating mode was not recorded, and the scheme
+  name does not reflect it (see the
+  [thermal and power modes note](2026-10-08-thermal-and-power-modes.md)).
 - Scope labels follow [ADR 0018](../adr/0018-generic-windows-baseline-vendor-integrations-optional.md):
   **generic** means it follows from how Windows works and should hold on any PC;
   **this machine** means it may depend on the hardware or power settings.
@@ -78,8 +81,9 @@ contents are not the cause. Between one-second ticks the platform's memory subsy
 returns to a slower, low-power state, and every tick pays for it.
 
 The 1 Hz figure is the one that matters, because the daemon will call it once per
-second. Whether this effect depends on the AMD platform or on the Silent scheme is
-still open (see below).
+second. Later runs showed that the penalty persists in the Performance mode and grows
+on battery ([thermal and power modes](2026-10-08-thermal-and-power-modes.md)).
+Whether it is specific to this AMD platform is still open.
 
 ### Cost scales at least linearly with thread count (generic)
 
@@ -175,6 +179,6 @@ source's cost is known:
 
 ## Open
 
-- Repeat the 1 Hz run in the Performance power mode and on battery, to learn whether
-  the low-power penalty depends on the power scheme.
 - Look for a documented information class that omits per-thread records.
+- Repeat on a machine with a different platform (Intel, desktop) to learn whether the
+  low-power penalty is specific to this one.

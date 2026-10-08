@@ -231,7 +231,9 @@ Sensors come in two tiers:
 - **Baseline, on every Windows 11 PC:**
   - ACPI thermal zone temperature, always labeled low confidence;
   - thermal zone passive limit and throttle reasons;
-  - `% Performance Limit`, processor frequency and the power mode;
+  - `% Performance Limit`, effective processor frequency and the power mode;
+  - package and core power from the Energy Meter counters, where the platform provides
+    them;
   - GPU temperature from the display driver, if Phase 0 shows that reading it does not
     wake a sleeping discrete GPU.
 - **Vendor integrations, optional modules:** active only when their hardware is
@@ -462,9 +464,10 @@ Risks:
 - **Polling can wake the dGPU.** NVML does, and Phase 0 checks whether the generic GPU
   sources (PDH, D3DKMT) do too. We need a way to detect the discrete GPU's power state
   without waking it. Phase 0.
-- **Thermal zone reading on the reference machine.** It reads 83 to 89 °C at 3.6 %
-  CPU load with the Silent plan. Phase 0 compares it with the temperature Armoury
-  Crate displays to learn what it measures.
+- **Thermal zones differ between machines.** On the reference machine the zone matches
+  the CPU temperature Armoury Crate shows within 1 to 3 °C
+  ([research](../research/2026-10-08-thermal-and-power-modes.md)), but on an unknown
+  machine Vagus cannot tell what a zone measures.
 - **WebView2 under load.** Real cold-open times and memory need measuring on the
   reference machine.
 - **Toasts from an unpackaged daemon** need a registered AppUserModelID (normally via a
