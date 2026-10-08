@@ -3,6 +3,7 @@
 //! This crate family is the only place where `unsafe` is allowed. Kernel buffers are
 //! parsed in safe code, so the parsers can be tested with synthetic input.
 
+pub mod current_process;
 mod process_snapshot;
 
 pub use process_snapshot::{ImageName, ProcessRecord, ProcessSnapshot, Processes, SnapshotError};
