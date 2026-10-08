@@ -1,0 +1,24 @@
+# cargo-deny policy for every dependency. CI runs `cargo deny check`; run it locally
+# after adding or updating a dependency.
+
+[graph]
+# Vagus is Windows-only, so dependencies that only other targets pull in are ignored.
+targets = ["x86_64-pc-windows-msvc"]
+
+[advisories]
+yanked = "deny"
+
+[licenses]
+# Every dependency must be compatible with releasing Vagus under MIT OR Apache-2.0
+# (ADR 0003). Extend the list deliberately, one license at a time.
+allow = ["MIT", "Apache-2.0"]
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# Workspace crates depend on each other by path and are never published.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

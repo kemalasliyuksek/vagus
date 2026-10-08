@@ -56,6 +56,11 @@ cargo test --workspace
 - Both aliases live in `.cargo/config.toml`.
 - Fix formatting with `cargo fmt --all`.
 
+CI (`.github/workflows/ci.yml`) runs the gate on `windows-latest`. It also runs
+`cargo deny check` (dependency licenses, advisories and sources, with the policy in
+`deny.toml`) and gitleaks over the full history. Run `cargo deny check` locally after
+adding or updating a dependency.
+
 Frontend commands are added in Phase 1.
 
 ## Architecture rules
