@@ -1,6 +1,6 @@
 # 0010. Data collection strategy: poll metrics, subscribe to inventory
 
-- Status: proposed (source costs are measured in Phase 0)
+- Status: superseded by [ADR 0019](0019-data-collection-sources-from-phase-0.md)
 - Date: 2026-10-06
 - Deciders: Kemal Aslıyüksek
 

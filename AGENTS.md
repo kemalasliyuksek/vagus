@@ -69,14 +69,16 @@ Frontend commands are added in Phase 1.
   command handling to a privileged process
   ([ADR 0009](docs/adr/0009-privilege-model.md)).
 - **Metrics are polled, inventory is event-driven.** No WMI, no process spawning and no
-  `Win32_Product` in periodic code paths
-  ([ADR 0010](docs/adr/0010-data-collection-strategy.md)).
-- **No kernel drivers.** No WinRing0-style generic hardware access. Call only the read
-  methods of ATKACPI ([ADR 0012](docs/adr/0012-hardware-sensor-sources.md)).
+  `Win32_Product` in periodic code paths. Sources that wait on hardware never block the
+  sampling thread ([ADR 0019](docs/adr/0019-data-collection-sources-from-phase-0.md)).
+- **No kernel drivers.** No WinRing0-style generic hardware access. Vendor interfaces
+  such as ATKACPI are optional modules that call read methods only
+  ([ADR 0018](docs/adr/0018-generic-windows-baseline-vendor-integrations-optional.md)).
 - **Hot paths do not allocate in steady state.** Reuse buffers; `RingBuffer::push`
   returns the evicted item for this purpose.
 - **Performance budgets** in the design document are requirements. Measure, do not
-  guess.
+  guess. Measure CPU with cycle counters (`QueryThreadCycleTime`,
+  `QueryProcessCycleTime`); tick-sampled process times overstate short periodic work.
 - **No network access** from any component unless the user configured it. No telemetry
   ([ADR 0013](docs/adr/0013-logging-and-no-telemetry.md)).
 - **Modules are compiled in.** Do not build plugin loading
@@ -156,7 +158,7 @@ output meets the standard of careful human work:
    workspace `members` glob covers it.
 2. Implement the `Module` trait. Declare its metrics, entity collections, actions and
    events with `schemars` schemas.
-3. Collect according to ADR 0010. Platform calls go through `platform-windows`.
+3. Collect according to ADR 0019. Platform calls go through `platform-windows`.
 4. Add message keys to `locales/en.json` and `locales/tr.json`.
 5. Test with fakes, and add a hardware smoke test that skips cleanly when the hardware
    is absent.

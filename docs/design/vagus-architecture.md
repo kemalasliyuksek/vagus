@@ -211,7 +211,8 @@ Details in [ADR 0009](../adr/0009-privilege-model.md):
 
 ### Data collection
 
-Details in [ADR 0010](../adr/0010-data-collection-strategy.md):
+Details in [ADR 0019](../adr/0019-data-collection-sources-from-phase-0.md), based on the
+[Phase 0 measurements](../research/2026-10-08-phase-0-summary.md):
 
 - **Metrics are polled**, at 1 Hz by default. The process snapshot runs every 2 seconds:
   one snapshot costs about 6 ms of CPU on the reference machine, and per-process
@@ -236,7 +237,8 @@ Sensors come in two tiers:
 - **Baseline, on every Windows 11 PC:**
   - ACPI thermal zone temperature, always labeled low confidence;
   - thermal zone passive limit and throttle reasons;
-  - `% Performance Limit`, effective processor frequency and the power mode;
+  - effective processor frequency, `% Performance Limit` where the platform reports
+    it, and the power mode;
   - package and core power from the Energy Meter counters, where the platform provides
     them;
   - GPU temperature from the display driver, if Phase 0 shows that reading it does not
@@ -268,10 +270,10 @@ signals that commonly explain slowness on laptops.
 
 | Resource | Utilization | Saturation | Context / errors |
 |---|---|---|---|
-| CPU | total and per-core busy % | processor queue length; runnable time per process | `% Performance Limit` below 100 (throttling), `% Processor Performance`, power plan, AC or battery |
+| CPU | total and per-core busy % | processor queue length; runnable time per process | `% Processor Performance` falling while busy (throttling), `% Performance Limit` below 100 where reported, package power held flat (power cap), power mode, AC or battery |
 | Memory | committed vs limit, available | hard faults/sec (`Pages Input/sec`) | commit failures |
 | Disk | active time | queue length | latency (`Avg. Disk sec/Transfer`), errors (later) |
-| GPU | per-engine utilization per adapter | dedicated memory pressure | which adapter each process uses; dGPU power state |
+| GPU | per-engine utilization per adapter | dedicated memory pressure | which adapter each process uses; dGPU power state; which processes keep the dGPU awake |
 | Network | throughput vs link speed | | errors and discards |
 | Thermal | temperatures | fan speed vs temperature | sensor confidence |
 

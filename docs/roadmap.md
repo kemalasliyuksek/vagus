@@ -1,12 +1,14 @@
 # Roadmap
 
-Status on 2026-10-06: Phase 0 is in progress; measurements so far are in
-[`docs/research/`](research/). The repository contains the design document, the ADRs
-and a minimal `vagus-core` crate that keeps the quality gate honest.
+Status on 2026-10-08: Phase 0 is complete, except one test that carries into Phase 1
+(whether GPU queries wake a sleeping discrete GPU). Phase 1 is next. The repository
+contains the design document, the ADRs, the Phase 0 research in
+[`docs/research/`](research/) and a minimal `vagus-core` crate that keeps the quality
+gate honest.
 
 The rule for every phase: ship one thing end to end before widening the scope.
 
-## Phase 0: measure the risky sources
+## Phase 0: measure the risky sources (done)
 
 Goal: replace the assumptions in [ADR 0010](adr/0010-data-collection-strategy.md) and
 the baseline sources of
@@ -41,6 +43,13 @@ Exit criteria:
 - ADR 0010 accepted or superseded, and the baseline sources in ADR 0018 confirmed or
   replaced.
 
+Result (2026-10-08): both criteria are met by the
+[Phase 0 summary](research/2026-10-08-phase-0-summary.md) and by
+[ADR 0019](adr/0019-data-collection-sources-from-phase-0.md), which supersedes ADR 0010
+and completes the validation of ADR 0018's baseline sources. One test is still open:
+whether GPU queries wake a sleeping discrete GPU. It runs before GPU temperature is
+enabled in Phase 1.
+
 ## Phase 1: core and the first module, end to end
 
 - **`vagus-core`:** capability registry, `Module` trait, finding model, ring buffer
@@ -56,8 +65,9 @@ Exit criteria:
 - **perf module:**
   - processes;
   - CPU, including throttling and power plan;
-  - baseline thermal signals: thermal zone, passive limit, throttle reasons, and GPU
-    temperature if Phase 0 confirms it;
+  - baseline thermal and power signals: thermal zone, passive limit, throttle reasons,
+    effective frequency, package power where available, and GPU temperature once the
+    discrete-GPU wake test passes;
   - memory and disk;
   - GPU per process with its adapter;
   - network totals;

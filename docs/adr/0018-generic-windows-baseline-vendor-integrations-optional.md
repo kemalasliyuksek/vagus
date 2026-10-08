@@ -1,7 +1,8 @@
 # 0018. Generic Windows baseline, vendor integrations as optional modules
 
 - Status: accepted (supersedes [ADR 0012](0012-hardware-sensor-sources.md); the baseline
-  sources are validated in Phase 0)
+  sources were validated in Phase 0, see
+  [ADR 0019](0019-data-collection-sources-from-phase-0.md))
 - Date: 2026-10-06
 - Deciders: Kemal Aslıyüksek
 
