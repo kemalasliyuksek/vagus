@@ -11,6 +11,10 @@ repository = "https://github.com/kemalasliyuksek/vagus"
 # Vagus ships as an application; crates are not published (the `vagus` name on crates.io is taken, see ADR 0002).
 publish = false
 
+[workspace.dependencies]
+thiserror = "2.0.21"
+windows-sys = "0.61.2"
+
 [workspace.lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
 

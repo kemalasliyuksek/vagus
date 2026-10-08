@@ -11,7 +11,13 @@ yanked = "deny"
 [licenses]
 # Every dependency must be compatible with releasing Vagus under MIT OR Apache-2.0
 # (ADR 0003). Extend the list deliberately, one license at a time.
-allow = ["MIT", "Apache-2.0"]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    # unicode-ident's Unicode data tables, reached through the proc-macro crates behind
+    # thiserror. Permissive and OSI approved.
+    "Unicode-3.0",
+]
 
 [bans]
 multiple-versions = "warn"

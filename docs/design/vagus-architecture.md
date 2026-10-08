@@ -428,7 +428,7 @@ vagus/
     core/                 vagus-core: shared types, ring buffer; later registry and module trait
     daemon/               (planned) vagus-daemon: scheduler, API, recorder, rules, notifications
     cli/                  (planned) vagus: CLI and the `vagus mcp` bridge
-    platform-windows/     (planned) Win32 / NT wrappers, the only crate with unsafe code
+    platform-windows/     Win32 / NT wrappers, the only crate with unsafe code
     sensor-service/       (planned, Phase 2) vagus-sensor privileged read-only service
     elevate/              (planned, Phase 2) one-shot elevated action helper
     modules/              (planned) perf, sensors, services, ... one crate each
